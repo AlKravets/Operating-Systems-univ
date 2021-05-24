@@ -1,0 +1,14 @@
+#!/bin/bash
+
+module_name=$1
+
+echo "Start script. Work with module $module_name (.py)"
+
+perf record -e sched:sched_switch  -e sched:sched_process_fork -e 'sched:sched_wak*' -k CLOCK_MONOTONIC  -- viztracer -o "($module_name)viztracer.json" --ignore_frozen -m $module_name
+
+perf script | per4m perf2trace sched -o "($module_name)perf.json"
+
+viztracer --combine "($module_name)perf.json" "($module_name)viztracer.json" -o "result_($module_name).html" 
+
+rm "($module_name)perf.json" "($module_name)viztracer.json" perf.data perf.data.old 
+exit 0

@@ -3,3 +3,5 @@
 *.out
 *.exe
 *test.txt
+my-project-env/
+lab3/python/*.html
